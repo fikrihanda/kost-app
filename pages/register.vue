@@ -80,7 +80,7 @@
 
 <script setup>
 import { helpers, required, minLength, sameAs } from '@vuelidate/validators'
-import { useAuth } from '~/stores/auth'
+import { useAuth } from '~~/stores/auth'
 
 const auth = useAuth()
 const config = useRuntimeConfig()

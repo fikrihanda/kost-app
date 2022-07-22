@@ -1,4 +1,4 @@
-import { useAuth } from '~/stores/auth'
+import { useAuth } from '~~/stores/auth'
 import { isEmpty } from '#lodash'
 
 export default defineNuxtRouteMiddleware(async () => {

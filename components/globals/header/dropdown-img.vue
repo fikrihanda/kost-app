@@ -45,7 +45,7 @@
 <script setup>
 import { isEmpty } from '#lodash'
 import { createPopper } from '@popperjs/core'
-import { useAuth } from '~/stores/auth'
+import { useAuth } from '~~/stores/auth'
 
 const auth = useAuth()
 const router = useRouter()

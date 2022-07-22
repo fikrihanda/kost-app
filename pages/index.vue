@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { useAuth } from '~/stores/auth'
+import { useAuth } from '~~/stores/auth'
 
 const auth = useAuth()
 const router = useRouter()
