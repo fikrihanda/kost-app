@@ -2,13 +2,8 @@ import { defineStore } from 'pinia'
 import { isEmpty } from '#lodash'
 import imageDefault from '~/assets/images/default-profile.jpg'
 
-interface AuthState {
-  info: object,
-  token: string
-}
-
 export const useAuth = defineStore('auth', {
-  state: (): AuthState => ({
+  state: () => ({
     info: {},
     token: ''
   }),
