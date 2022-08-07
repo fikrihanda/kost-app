@@ -1,18 +1,16 @@
+import { isEmpty } from '#lodash'
+
 class Fetcher {
-  constructor() {
-    this.baseUrl = '/'
-    this.defaults = {
-      headers: {}
-    }
-    this.interceptors = {
-      onRequest: [],
-      onRequestError: [],
-      onResponse: [],
-      onResponseError: []
-    }
-  }
-  setHeaders(name, value) {
-    this.defaults.headers[name] = value
+  baseUrl = ref('/')
+  headers = reactive({})
+  interceptors = reactive({
+    onRequest: ref([]),
+    onRequestError: ref([]),
+    onResponse: ref([]),
+    onResponseError: ref([])
+  })
+  setHeaders(key, value) {
+    this.headers[key.toLowerCase()] = value
   }
   setToken(token, type = 'Bearer') {
     const value =  !token ? null : (type ? type + ' ' : '') + token
@@ -40,7 +38,7 @@ class Fetcher {
   }
   created() {
     return $fetch.create({
-      baseURL: this.baseUrl,
+      baseURL: this.baseUrl.value,
       onRequest: (ctx) => {
         this.interceptors.onRequest.forEach(onReq => onReq(ctx))
       },
@@ -57,17 +55,19 @@ class Fetcher {
   }
   uses(url, opts) {
     const options = {
-      ...this.defaults,
+      headers: {
+        ...this.headers
+      },
       ...opts
     }
-    return this.created()(url, options)
+    let newUrl = url
+
+    if (!isEmpty(options.query)) {
+      newUrl = url + '?' + new URLSearchParams(options.query)
+    }
+
+    return this.created()(newUrl, options)
   }
 }
 
-export default defineNuxtPlugin(() => {
-  return {
-    provide: {
-      fetcher: new Fetcher()
-    }
-  }
-})
+export default new Fetcher()

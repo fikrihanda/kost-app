@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-screen bg-gray-50">
+  <div class="relative min-h-screen bg-gray-50">
     <globals-header
       ref="header"
       v-model="open"

@@ -13,16 +13,23 @@ export default defineEventHandler(async (e) => {
   }
 
   const trans = await transaction()
-  let dataAdmin
 
   try {
-    dataAdmin = await Admin.findOne({
+    const dataAdmin = await Admin.findOne({
       where: {
         username: adminContext.username
       },
       transaction: trans
     })
+    if (isEmpty(dataAdmin)) {
+      await rollback(trans)
+      return createError({
+        statusCode: 401,
+        statusMessage: 'Token invalid'
+      })
+    }
     await commit(trans)
+    return pick(dataAdmin, ['username', 'nama_depan', 'nama_belakang', 'photo_profile'])
   } catch (err) {
     await rollback(trans)
     return createError({
@@ -30,13 +37,4 @@ export default defineEventHandler(async (e) => {
       statusMessage: 'Token invalid'
     })
   }
-
-  if (isEmpty(dataAdmin)) {
-    return createError({
-      statusCode: 401,
-      statusMessage: 'Token invalid'
-    })
-  }
-
-  return pick(dataAdmin, ['username', 'nama_depan', 'nama_belakang', 'photo_profile'])
 })

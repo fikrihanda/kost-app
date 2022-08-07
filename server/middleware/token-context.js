@@ -18,7 +18,7 @@ export default defineEventHandler(async (e) => {
   if (isEmpty(token)) {
     return createError({
       statusCode: 401,
-      statusMessage: 'Token missing, context'
+      statusMessage: 'Token missing'
     })
   }
 

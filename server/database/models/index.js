@@ -18,16 +18,14 @@ const fileImportAsync = fs
   .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file.slice(-3) === '.js')
   })
-  .map(async file => {
-    return await import(`../../server/database/models/${file}`)
+  .map(file => {
+    return import(`../../server/database/models/${file}`)
   })
 
-Promise.all(fileImportAsync).then(fileImportSync => {
-  fileImportSync.forEach(models => {
-    const model = models.default(sq, Sq.DataTypes)
-    db[model.name] = model
-  })
-})
+for (const [i] of fileImportAsync.entries()) {
+  const model = (await fileImportAsync[i]).default(sq, Sq.DataTypes)
+  db[model.name] = model
+}
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
@@ -40,5 +38,6 @@ export const Sequelize = Sq
 export const transaction = async () => await sequelize.transaction()
 export const rollback = async (trans) => await trans.rollback()
 export const commit = async (trans) => await trans.commit()
+export const syncDB = async (opts) => await sequelize.sync(opts)
 
 export default db

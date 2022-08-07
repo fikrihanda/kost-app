@@ -18,51 +18,71 @@
           class="mt-8 space-y-6"
           @submit.prevent="onSubmit"
         >
-          <globals-input
-            v-model="$v.username.$model"
+          <globals-form-group
             label="Your username"
-            label-for="username"
-            placeholder="Username"
-            name="username"
-            :errors="$v.username.$errors"
-            :state="$validation.stateValid($v.username)"
-          />
-          <globals-input
-            v-model="$v.password.$model"
-            type="password"
+            :state="stateValid($v.username)"
+          >
+            <template #default="{ labelFor }">
+              <globals-form-input
+                :id="labelFor"
+                v-model="$v.username.$model"
+                placeholder="Username"
+                :errors="$v.username.$errors"
+                name="username"
+              />
+            </template>
+          </globals-form-group>
+          <globals-form-group
             label="Your password"
-            label-for="current-password"
-            placeholder="Password"
-            name="current-password"
-            :errors="$v.password.$errors"
-            :state="$validation.stateValid($v.password)"
-          />
-          <globals-input
-            v-model="$v.repeat.$model"
-            type="password"
+            :state="stateValid($v.password)"
+          >
+            <template #default="{ labelFor }">
+              <globals-form-input
+                :id="labelFor"
+                v-model="$v.password.$model"
+                placeholder="Password"
+                :errors="$v.password.$errors"
+                type="password"
+                name="password"
+              />
+            </template>
+          </globals-form-group>
+          <globals-form-group
             label="Confirm password"
-            label-for="repeat"
-            placeholder="Confirm Password"
-            name="repeat"
-            :errors="$v.repeat.$errors"
-            :state="$validation.stateValid($v.repeat)"
-          />
-          <globals-input
-            v-model="$v.code.$model"
-            type="password"
+            :state="stateValid($v.repeat)"
+          >
+            <template #default="{ labelFor }">
+              <globals-form-input
+                :id="labelFor"
+                v-model="$v.repeat.$model"
+                placeholder="Confirm Password"
+                :errors="$v.repeat.$errors"
+                type="password"
+                name="repeat"
+              />
+            </template>
+          </globals-form-group>
+          <globals-form-group
             label="Admin code"
-            label-for="one-time-code"
-            placeholder="Admin code"
-            name="one-time-code"
-            :errors="$v.code.$errors"
-            :state="$validation.stateValid($v.code)"
-          />
-          <button
+            :state="stateValid($v.code)"
+          >
+            <template #default="{ labelFor }">
+              <globals-form-input
+                :id="labelFor"
+                v-model="$v.code.$model"
+                placeholder="Admin code"
+                :errors="$v.code.$errors"
+                type="password"
+                name="one-time-code"
+              />
+            </template>
+          </globals-form-group>
+          <globals-button
             type="submit"
-            class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-base px-5 py-3 w-full sm:w-auto text-center"
+            variant="primary"
           >
             Create account
-          </button>
+          </globals-button>
           <div class="text-sm font-medium text-gray-500">
             Already have an account?
             <nuxt-link
@@ -84,8 +104,8 @@ import { useAuth } from '~~/stores/auth'
 
 const auth = useAuth()
 const config = useRuntimeConfig()
-const { $toaster, $validation } = useNuxtApp()
 const router = useRouter()
+const toaster = useToast()
 
 const equal = param => val => {
   return !helpers.req(val) || param === parseInt(val)
@@ -99,7 +119,7 @@ definePageMeta({
   layout: 'non-user'
 })
 
-const { $v, form, rules } = useValidation({
+const { $v, form, rules, stateValid } = useValidation({
   form: {
     username: '',
     password: '',
@@ -119,7 +139,7 @@ const { $v, form, rules } = useValidation({
         minLength: helpers.withMessage(({ $params }) => `Password minim ${$params.min} in length`, minLength(8))
       },
       repeat: {
-        sameAs: helpers.withMessage('Password must be identical', sameAs(frm.value.password))
+        sameAs: helpers.withMessage('Password must be identical', sameAs(frm.password))
       },
       code: {
         required: helpers.withMessage('Admin code must not empty', required),
@@ -148,13 +168,13 @@ const onSubmit = async () => {
       username: form.username,
       password: form.password
     })
-    $toaster({
+    toaster.show({
       type: 'success',
       message: 'Berhasil register di website kami'
     })
     router.push('/login')
   } catch (err) {
-    $toaster({
+    toaster.show({
       type: 'danger',
       message: err.data.message
     })

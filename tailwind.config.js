@@ -5,6 +5,7 @@ module.exports = {
     './layouts/**/*.vue',
     './pages/**/*.vue',
     './plugins/**/*.{js,ts}',
+    './other-plugins/**/*.{js,ts}',
     './app.{vue,js,ts}',
     './node_modules/flowbite/**/*.js'
   ],

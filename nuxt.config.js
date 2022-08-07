@@ -12,6 +12,10 @@ export default defineNuxtConfig({
   css: [
     '@/assets/styles/app.css'
   ],
+  plugins: [
+    '~/other-plugins/pinia-persisted',
+    '~/other-plugins/toaster'
+  ],
   buildModules: [
     '@pinia/nuxt',
     '~/modules/google-fonts',
@@ -23,6 +27,7 @@ export default defineNuxtConfig({
   build: {
     postcss: {
       postcssOptions: {
+        syntax: 'postcss-scss',
         plugins: {
           'tailwindcss/nesting': 'postcss-nested',
           tailwindcss: {},
@@ -59,7 +64,7 @@ export default defineNuxtConfig({
   nitro: {
     esbuild: {
       options: {
-        target: 'node14'
+        target: 'esnext'
       }
     }
   }

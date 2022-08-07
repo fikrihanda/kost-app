@@ -26,10 +26,9 @@
 <script setup>
 import { watch, computed } from '#imports'
 import { useInterval } from '@vueuse/core'
-import { useToaster } from '~/stores/toaster'
 
 const { counter, pause } = useInterval(200, { controls: true })
-const toaster = useToaster()
+const toaster = useToast()
 
 const props = defineProps({
   item: {
@@ -63,14 +62,14 @@ const messageItem = computed(() => {
 
 const onClose = () => {
   pause()
-  toaster.removeMessage(props.item)
+  toaster.remove(props.item)
 }
 
 
 watch(counter, (val) => {
   if (val === 10) {
     pause()
-    toaster.removeMessage(props.item)
+    toaster.remove(props.item)
   }
 })
 </script>

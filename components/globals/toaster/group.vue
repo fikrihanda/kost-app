@@ -2,7 +2,7 @@
   <div class="absolute right-5 bottom-5 max-w-xs w-full overflow-hidden">
     <TransitionGroup name="toaster-item">
       <globals-toaster-item
-        v-for="(v) in toaster.getMessages"
+        v-for="(v) in toasters"
         :key="v.id"
         :item="v"
       />
@@ -11,9 +11,7 @@
 </template>
 
 <script setup>
-import { useToaster } from '~/stores/toaster'
-
-const toaster = useToaster()
+const { toasters } = useToast()
 </script>
 
 <style lang="scss">

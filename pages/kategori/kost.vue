@@ -1,8 +1,7 @@
 <template>
   <div class="relative">
-    <kost-lists-pencarian
+    <kategori-kost-lists-pencaian
       v-model:nama="where.nama"
-      v-model:kategori="where.kategori"
       v-model:modal-tambah="modalTambah"
     />
     <div class="overflow-x-auto min-h-[calc(100vh-223px-64px-58px)] sm:min-h-[calc(100vh-167px-64px-58px)] lg:min-h-[calc(100vh-167px-57px-57px)]">
@@ -18,28 +17,25 @@
                   >
                 </th>
                 <th class="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                  Nama Kost
-                </th>
-                <th class="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                  Alamat
+                  Nama Kategori Kost
                 </th>
                 <th class="p-4" />
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr
-                v-if="kost_lists.length === 0"
+                v-if="kategoriKost_lists.length === 0"
                 class="hover:bg-gray-100"
               >
                 <td
-                  colspan="4"
+                  colspan="3"
                   class="p-4 whitespace-nowrap text-sm font-normal text-gray-500"
                 >
                   Data Kosong
                 </td>
               </tr>
               <tr
-                v-for="(v) in kost_lists"
+                v-for="(v) in kategoriKost_lists"
                 v-else
                 :key="v.id"
                 class="hover:bg-gray-100"
@@ -52,9 +48,6 @@
                 </td>
                 <td class="p-4 whitespace-nowrap text-base font-semibold text-gray-500">
                   {{ v.nama }}
-                </td>
-                <td class="p-4 whitespace-nowrap text-base font-semibold text-gray-500">
-                  {{ v.alamat }}
                 </td>
                 <td class="p-4 whitespace-nowrap space-x-2">
                   <button class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
@@ -79,32 +72,32 @@
     <div class="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
       a
     </div>
+    <kategori-kost-modal-tambah v-model="modalTambah" />
   </div>
 </template>
 
 <script setup>
 import { isEmpty } from 'lodash'
-import { useKost } from '~/stores/kost'
+import { useKategoriKost } from '~/stores/kategori-kost'
 
 useHead({
-  title: 'Kost'
+  title: 'Kategori Kost'
 })
 
 definePageMeta({
   middleware: ['is-auth']
 })
 
-const kost = useKost()
+const kategoriKost = useKategoriKost()
 const modalTambah = ref(false)
 const page = ref(1)
 const perpage = ref(10)
 const where = reactive({
-  nama: '',
-  kategori: ''
+  nama: ''
 })
 
-const kost_lists = computed(() => kost.getLists)
-const kost_pagination = computed(() => kost.getPagination)
+const kategoriKost_lists = computed(() => kategoriKost.getLists)
+const kategoriKost_pagination = computed(() => kategoriKost.getPagination)
 
 const onFecth = async () => {
   try {
@@ -112,7 +105,7 @@ const onFecth = async () => {
     if (!isEmpty(where.nama)) {
       w.nama = where.nama
     }
-    await kost.getAll({
+    await kategoriKost.getAll({
       ...w,
       page: page.value,
       perpage: perpage.value
@@ -123,7 +116,7 @@ const onFecth = async () => {
   }
 }
 
-const { pending, refresh } = await useAsyncData('kost-getall', () => onFecth(), {
+const { pending, refresh } = await useAsyncData('kategori-kost-getall', () => onFecth(), {
   initialCache: false
 })
 

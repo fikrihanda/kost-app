@@ -14,5 +14,11 @@ export default function (options) {
     })
   }
   const $v = useVuelidate(rules, form)
-  return { $v, form, rules }
+  const stateValid = (v$) => {
+    if (v$?.$dirty) {
+      return !v$?.$error
+    }
+    return null
+  }
+  return { $v, form, rules, stateValid }
 }

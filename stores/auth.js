@@ -13,9 +13,9 @@ export const useAuth = defineStore('auth', {
   },
   actions: {
     async login (body) {
+      const { fetcher } = useFetcher()
       try {
-        const $nuxt = useNuxtApp()
-        const { token } = await $nuxt.$fetcher.uses('/api/auth/login', {
+        const { token } = await fetcher.uses('/api/auth/login', {
           method: 'post',
           body
         })
@@ -30,8 +30,8 @@ export const useAuth = defineStore('auth', {
     },
     async register (body) {
       try {
-        const $nuxt = useNuxtApp()
-        await $nuxt.$fetcher.uses('/api/auth/register', {
+        const { fetcher } = useFetcher()
+        await fetcher.uses('/api/auth/register', {
           method: 'post',
           body
         })
@@ -42,8 +42,8 @@ export const useAuth = defineStore('auth', {
     },
     async getAuthInfo () {
       try {
-        const $nuxt = useNuxtApp()
-        const info = await $nuxt.$fetcher.uses('/api/auth/info', {
+        const { fetcher } = useFetcher()
+        const info = await fetcher.uses('/api/auth/info', {
           method: 'get'
         })
         if (isEmpty(info.photo_profile)) {

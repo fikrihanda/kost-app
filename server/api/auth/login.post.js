@@ -18,6 +18,7 @@ export default defineEventHandler(async (e) => {
     })
 
     if (isEmpty(admin)) {
+      await rollback(trans)
       return createError({
         statusCode: 500,
         statusMessage: 'Username tidak ada'
@@ -26,6 +27,7 @@ export default defineEventHandler(async (e) => {
 
     const dec = decrypt(admin.password)
 
+
     if (dec !== body.password) {
       return createError({
         statusCode: 500,
@@ -33,8 +35,8 @@ export default defineEventHandler(async (e) => {
       })
     }
 
-    await commit(trans)
     const jwtSign = await sign(pick(admin, ['username']))
+    await commit(trans)
 
     return {
       token: jwtSign

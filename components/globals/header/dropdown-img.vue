@@ -13,7 +13,7 @@
     </button>
     <div
       ref="dropdownTem"
-      :class="[ 'w-56 z-30 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow', open ? 'show' : 'hidden' ]"
+      :class="[ 'w-56 z-30 text-base list-none bg-white rounded divide-y divide-gray-100 shadow', open ? 'show' : 'hidden' ]"
     >
       <div class="py-3 px-4">
         <span class="block text-sm text-gray-900">{{ namaLengkap }}</span>
@@ -23,7 +23,6 @@
           <a
             href="#"
             class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
-            @click.prevent="onLogout"
           >
             Setting
           </a>

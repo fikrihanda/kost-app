@@ -18,29 +18,44 @@
           class="mt-8 space-y-6"
           @submit.prevent="onSubmit"
         >
-          <globals-input
-            v-model="$v.username.$model"
+          <globals-form-group
             label="Your username"
-            placeholder="Username"
-            :errors="$v.username.$errors"
-            :state="$validation.stateValid($v.username)"
-            :icon="[ 'fas', 'user' ]"
-          />
-          <globals-input
-            v-model="$v.password.$model"
+            :state="stateValid($v.username)"
+          >
+            <template #default="{ labelFor }">
+              <globals-form-input
+                :id="labelFor"
+                v-model="$v.username.$model"
+                placeholder="Username"
+                :icon="[ 'fas', 'user' ]"
+                :errors="$v.username.$errors"
+                name="username"
+              />
+            </template>
+          </globals-form-group>
+
+          <globals-form-group
             label="Your password"
-            placeholder="Password"
-            type="password"
-            :errors="$v.password.$errors"
-            :state="$validation.stateValid($v.password)"
-            :icon="[ 'fas', 'lock' ]"
-          />
-          <button
+            :state="stateValid($v.password)"
+          >
+            <template #default="{ labelFor }">
+              <globals-form-input
+                :id="labelFor"
+                v-model="$v.password.$model"
+                placeholder="Password"
+                :icon="[ 'fas', 'lock' ]"
+                :errors="$v.password.$errors"
+                type="password"
+                name="password"
+              />
+            </template>
+          </globals-form-group>
+          <globals-button
             type="submit"
-            class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-base px-5 py-3 w-full sm:w-auto text-center"
+            variant="primary"
           >
             Login to your account
-          </button>
+          </globals-button>
           <div class="text-sm font-medium text-gray-500">
             Not registered?
             <nuxt-link
@@ -62,7 +77,7 @@ import { useAuth } from '~~/stores/auth'
 
 const auth = useAuth()
 const router = useRouter()
-const { $toaster, $validation } = useNuxtApp()
+const toaster = useToast()
 
 useHead({
   title: 'Login'
@@ -72,7 +87,7 @@ definePageMeta({
   middleware: ['isnt-auth']
 })
 
-const { $v, form, rules } = useValidation({
+const { $v, form, rules, stateValid } = useValidation({
   form: {
     username: '',
     password: ''
@@ -101,13 +116,13 @@ const onSubmit = async () => {
   }
   try {
     await auth.login(form)
-    $toaster({
+    toaster.show({
       type: 'success',
       message: 'Berhasil login di website kami'
     })
     router.push('/')
   } catch (err) {
-    $toaster({
+    toaster.show({
       type: 'danger',
       message: err?.data?.message || err.message
     })

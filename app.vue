@@ -1,8 +1,6 @@
 <template>
   <nuxt-layout>
-    <client-only>
-      <nuxt-page />
-    </client-only>
+    <nuxt-page />
     <teleport to="body">
       <globals-toaster-group />
     </teleport>

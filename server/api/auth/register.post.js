@@ -16,6 +16,7 @@ export default defineEventHandler(async (e) => {
     })
 
     if (!isEmpty(admin)) {
+      await rollback(trans)
       return createError({
         statusCode: 500,
         statusMessage: 'Username sudah ada'
